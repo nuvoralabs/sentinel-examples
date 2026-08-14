@@ -27,6 +27,7 @@ project — all in [`Sentinel.Samples.slnx`](./Sentinel.Samples.slnx). Mirrored 
 | [`018-relay-bridge`](./018-relay-bridge) | A Relay app on Sentinel auth: `UseSentinelRelayAuthContext`, `[RequirePermission]` decided by the real evaluator (wildcards, deny-overrides), org claim → Relay tenant | No (in-memory) |
 | [`019-api-keys-owner-capped`](./019-api-keys-owner-capped) | `snt_` API keys capped to owner ∩ scopes at every use: denies preserved, owner demotion shrinks keys instantly, opaque 401 for revoked/expired | No (in-memory) |
 | [`020-importing-identity`](./020-importing-identity) | Four importers, one target: Identity V3 verify + rehash-on-login, Keycloak realm export, Auth0 bcrypt ndjson, Duende secret rotation-on-migration, dry-run reports | SQLite in-memory (no Docker) |
+| [`021-aspnet-authorization`](./021-aspnet-authorization) | Stock `[Authorize(Policy = …)]` and `[SentinelPermission]` on MVC controllers decided by Sentinel's evaluator: route-bound and resolver-bound resources, list visibility, and startup refusing a guard it cannot enforce | No (in-memory) |
 
 ## Prerequisites
 

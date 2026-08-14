@@ -40,4 +40,6 @@
   <Project Path="019-api-keys-owner-capped/MachineKeys.Api.Tests/MachineKeys.Api.Tests.csproj" />
   <Project Path="020-importing-identity/IdentityImport.Api/IdentityImport.Api.csproj" />
   <Project Path="020-importing-identity/IdentityImport.Api.Tests/IdentityImport.Api.Tests.csproj" />
+  <Project Path="021-aspnet-authorization/Helpdesk.Api/Helpdesk.Api.csproj" />
+  <Project Path="021-aspnet-authorization/Helpdesk.Api.Tests/Helpdesk.Api.Tests.csproj" />
 </Solution>
