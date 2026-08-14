@@ -1,0 +1,57 @@
+# Declarative Sentinel configuration for the clinic host.
+#
+# Applied idempotently at every boot: entities are matched by natural key, created when
+# missing, updated when drifted — and NEVER deleted. Removing an entry from this file leaves
+# it in the store (absence != deletion); a section's `prune` flag makes the report SAY what a
+# prune would remove, and v1 refuses to auto-delete.
+#
+# Secrets never live in this file: `secretRef` names an ENVIRONMENT VARIABLE that holds the
+# value at apply time.
+
+version: 1
+
+realms:
+  - key: clinic
+    displayName: Clinic
+    isDefault: true
+
+    organizations:
+      - key: lakeside
+        displayName: Lakeside Clinic
+        domains:
+          - domain: lakeside.example
+            kind: emailDomain
+            verified: true
+
+    roles:
+      # Realm-level role: no `organization` key.
+      - key: support
+        displayName: Support engineer
+        grants:
+          - pattern: "sentinel:org:view"
+      # Org-local role for the org declared above.
+      - key: org-admin
+        displayName: Organization administrator
+        organization: lakeside
+        grants:
+          - pattern: "sentinel:org:manage"
+          - pattern: "sentinel:org:impersonate"
+
+    oidcClients:
+      # First-party SPA: public client, PKCE-only, no secret.
+      - clientId: clinic-spa
+        type: public
+        firstParty: true
+        redirectUris:
+          - https://app.clinic.example/callback
+        allowedScopes: [openid, profile, email]
+
+      # Server-side partner app: confidential, secret resolved from the environment.
+      - clientId: partner-portal
+        type: confidential
+        secretRef: CLINIC_SECRET_PARTNER_PORTAL   # env var NAME, not a value
+        requireConsent: true
+        redirectUris:
+          - https://portal.partner.example/oidc/callback
+        allowedScopes: [openid, profile]
+        accessTokenLifetime: "00:05:00"

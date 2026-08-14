@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>SamlLoop.Api</RootNamespace>
+    <AssemblyName>SamlLoop.Api</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core: identity stores, the ISamlStore/IFederatedIdentityStore ports + in-memory impls. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Core/Nuvora.Nexus.Sentinel.Core.csproj" />
+    <!-- Meta package: AddSentinel() DI wiring + the login stack the SAML flows ride on. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel/Nuvora.Nexus.Sentinel.csproj" />
+    <!-- ASP.NET surface: authentication handler, cookie transport, MapSentinelAuth. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.AspNetCore/Nuvora.Nexus.Sentinel.AspNetCore.csproj" />
+    <!-- SAML: SP + IdP services, endpoints, XML-DSig with pinned-cert verification. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Saml/Nuvora.Nexus.Sentinel.Saml.csproj" />
+  </ItemGroup>
+
+</Project>

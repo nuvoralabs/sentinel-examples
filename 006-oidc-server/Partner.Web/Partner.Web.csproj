@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>Partner.Web</RootNamespace>
+    <AssemblyName>Partner.Web</AssemblyName>
+  </PropertyGroup>
+
+  <!--
+    Deliberately NO Sentinel references: the relying party is a plain OAuth2/OIDC client — any
+    standard RP stack works against Sentinel's AS surface. This one is hand-rolled
+    so every protocol step is visible.
+  -->
+
+</Project>

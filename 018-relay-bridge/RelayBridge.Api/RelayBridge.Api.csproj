@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>RelayBridge.Api</RootNamespace>
+    <AssemblyName>RelayBridge.Api</AssemblyName>
+  </PropertyGroup>
+
+  <!-- The bridge package transitively brings the Relay stack (Nuvora.Nexus.Relay,
+       Relay.Core, Relay.Auth, Relay.Tenancy) — from the sibling monorepo checkout in source
+       mode, from the matching NuGet packages in the public examples mirror. -->
+  <ItemGroup>
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Core/Nuvora.Nexus.Sentinel.Core.csproj" />
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel/Nuvora.Nexus.Sentinel.csproj" />
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.AspNetCore/Nuvora.Nexus.Sentinel.AspNetCore.csproj" />
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Relay/Nuvora.Nexus.Sentinel.Relay.csproj" />
+  </ItemGroup>
+
+</Project>

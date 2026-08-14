@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>AbuseGate.Api</RootNamespace>
+    <AssemblyName>AbuseGate.Api</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core: AbuseProtectionService, SentinelAbuseOptions, ICaptchaVerifier, stores. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Core/Nuvora.Nexus.Sentinel.Core.csproj" />
+    <!-- Meta package: AddSentinel() wires the abuse gate in front of every login. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel/Nuvora.Nexus.Sentinel.csproj" />
+    <!-- ASP.NET surface: authentication handler + MapSentinelAuth. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.AspNetCore/Nuvora.Nexus.Sentinel.AspNetCore.csproj" />
+  </ItemGroup>
+
+</Project>

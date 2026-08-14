@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>Passkeys.Api</RootNamespace>
+    <AssemblyName>Passkeys.Api</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core: identity model, in-memory stores (incl. the passkey store), event-sink port. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Core/Nuvora.Nexus.Sentinel.Core.csproj" />
+    <!-- Meta package: AddSentinel() DI wiring. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel/Nuvora.Nexus.Sentinel.csproj" />
+    <!-- ASP.NET surface: AddSentinelPasskeys + MapSentinelPasskeys — all WebAuthn/Fido2 usage
+         lives in this package, Core stays dependency-light. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.AspNetCore/Nuvora.Nexus.Sentinel.AspNetCore.csproj" />
+  </ItemGroup>
+
+</Project>

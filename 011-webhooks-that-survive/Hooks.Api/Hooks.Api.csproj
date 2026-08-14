@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>Hooks.Api</RootNamespace>
+    <AssemblyName>Hooks.Api</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core: WebhookAdminService, WebhookDispatcher, WebhookSignature, in-memory stores. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Core/Nuvora.Nexus.Sentinel.Core.csproj" />
+    <!-- Meta package: AddSentinel() + AddSentinelWebhooks() DI wiring. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel/Nuvora.Nexus.Sentinel.csproj" />
+    <!-- ASP.NET surface: authentication handler, MapSentinel* groups, the hosted dispatcher. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.AspNetCore/Nuvora.Nexus.Sentinel.AspNetCore.csproj" />
+  </ItemGroup>
+
+</Project>

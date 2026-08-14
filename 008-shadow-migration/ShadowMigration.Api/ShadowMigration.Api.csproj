@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>ShadowMigration.Api</RootNamespace>
+    <AssemblyName>ShadowMigration.Api</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Core/Nuvora.Nexus.Sentinel.Core.csproj" />
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel/Nuvora.Nexus.Sentinel.csproj" />
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.AspNetCore/Nuvora.Nexus.Sentinel.AspNetCore.csproj" />
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Importers/Nuvora.Nexus.Sentinel.Importers.csproj" />
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Stores.EfCore/Nuvora.Nexus.Sentinel.Stores.EfCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
+    <!-- EF's Sqlite package pulls SQLitePCLRaw 2.1.11, whose native lib has a known vulnerability
+         (NU1903). Pin the patched bundle directly, as the library's own test projects do. -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.13" />
+    <!-- Generates REAL ASP.NET Identity V3 hashes for the fake "legacy" dataset, so the import
+         is exercised against the actual producer, not a hand-rolled imitation. -->
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.0" />
+  </ItemGroup>
+
+</Project>

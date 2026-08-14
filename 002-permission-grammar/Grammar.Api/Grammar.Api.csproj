@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>Grammar.Api</RootNamespace>
+    <AssemblyName>Grammar.Api</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core only: the permission grammar and evaluator are framework-free —
+         this sample needs no authentication stack, no stores, no meta package. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Core/Nuvora.Nexus.Sentinel.Core.csproj" />
+  </ItemGroup>
+
+</Project>

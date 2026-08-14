@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>StepUp.Api</RootNamespace>
+    <AssemblyName>StepUp.Api</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core: RiskEngine, the IRiskSignal set, EmailOtpService, the mailer port. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.Core/Nuvora.Nexus.Sentinel.Core.csproj" />
+    <!-- Meta package: AddSentinel() wires the risk gate into every login. -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel/Nuvora.Nexus.Sentinel.csproj" />
+    <!-- ASP.NET surface: authentication handler + MapSentinelAuth (login + mfa/verify). -->
+    <ProjectReference Include="$(SentinelSrc)/Nuvora.Nexus.Sentinel.AspNetCore/Nuvora.Nexus.Sentinel.AspNetCore.csproj" />
+  </ItemGroup>
+
+</Project>
