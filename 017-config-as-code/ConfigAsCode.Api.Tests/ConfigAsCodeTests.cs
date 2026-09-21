@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nuvora.Nexus.Sentinel.Admin;
 using Nuvora.Nexus.Sentinel.DeclarativeConfig;
+using Nuvora.Nexus.Sentinel.Policies;
 using Xunit;
 
 namespace ConfigAsCode.Api.Tests;
@@ -167,6 +169,40 @@ public class ConfigAsCodeTests
         // v1 never deletes: the clients are still being served.
         var state = await ReadJsonAsync(await host.Client.GetAsync("/config/state"));
         state.EnumerateArray().Single().GetProperty("clients").GetArrayLength().Should().Be(2);
+    }
+
+    [Fact]
+    public async Task Nested_divisions_apply_parents_first_and_are_referenced_by_path_key()
+    {
+        await using var host = await Host.CreateAsync();
+        var admin = host.Services.GetRequiredService<IAdminStore>();
+        var realm = (await admin.ListRealmsAsync()).Single(r => r.Key == "clinic");
+
+        // The tree came out of the file: parents before children, path keys derived.
+        var nodes = await admin.ListOrganizationsAsync(realm.Id);
+        nodes.Select(n => n.PathKey).Should().BeEquivalentTo(["lakeside", "lakeside/cardiology", "lakeside/records"]);
+        var lakeside = nodes.Single(n => n.PathKey == "lakeside");
+        var cardiology = nodes.Single(n => n.PathKey == "lakeside/cardiology");
+        cardiology.ParentId.Should().Be(lakeside.Id);
+        nodes.Single(n => n.PathKey == "lakeside/records").Kind.Should().Be("Back office");
+        (await admin.ListOrganizationLevelsAsync(lakeside.Id)).Select(l => l.Label).Should().Equal("Clinic", "Department");
+
+        // `organization: lakeside/cardiology` resolved to the department node, not to a flat key.
+        (await admin.ListRolesAsync(realm.Id, cardiology.Id)).Should().ContainSingle(r => r.Key == "department-lead");
+        (await admin.ListTeamsAsync(cardiology.Id, null)).Should().ContainSingle(t => t.Key == "cath-lab");
+
+        // Policies were applied top-down; a department that tries to loosen the clinic's value is
+        // reported as an error and not written.
+        var loosened = Declared();
+        var department = loosened.Realms[0].Organizations[0].Organizations.Single(o => o.Key == "cardiology");
+        department.Policies = new Dictionary<string, object?> { ["session.idle_minutes"] = 600 };
+        var report = await host.ApplyAsync(loosened);
+        report.HasErrors.Should().BeTrue();
+        report.Entries.Single(e => e.Kind == ConfigChangeKind.Error).Key.Should().Be("lakeside/cardiology#session.idle_minutes");
+
+        var policies = host.Services.GetRequiredService<IPolicyStore>();
+        (await policies.ListAsync(PolicyLevelKind.Node, cardiology.Id)).Should().BeEmpty();
+        (await policies.ListAsync(PolicyLevelKind.Node, lakeside.Id)).Should().ContainSingle(v => v.ValueJson == "120");
     }
 
     [Fact]

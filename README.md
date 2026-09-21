@@ -28,6 +28,7 @@ project — all in [`Sentinel.Samples.slnx`](./Sentinel.Samples.slnx). Mirrored 
 | [`019-api-keys-owner-capped`](./019-api-keys-owner-capped) | `snt_` API keys capped to owner ∩ scopes at every use: denies preserved, owner demotion shrinks keys instantly, opaque 401 for revoked/expired | No (in-memory) |
 | [`020-importing-identity`](./020-importing-identity) | Four importers, one target: Identity V3 verify + rehash-on-login, Keycloak realm export, Auth0 bcrypt ndjson, Duende secret rotation-on-migration, dry-run reports | SQLite in-memory (no Docker) |
 | [`021-aspnet-authorization`](./021-aspnet-authorization) | Stock `[Authorize(Policy = …)]` and `[SentinelPermission]` on MVC controllers decided by Sentinel's evaluator: route-bound and resolver-bound resources, list visibility, and startup refusing a guard it cannot enforce | No (in-memory) |
+| [`022-organization-tree`](./022-organization-tree) | Divisions under a tenant: grants that cascade down the tree, node switching within a subtree, delegated admin fenced per node, tighten-only policies, and an app allowed at the root but denied at one clinic | No (in-memory) |
 
 ## Prerequisites
 

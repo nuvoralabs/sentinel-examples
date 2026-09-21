@@ -15,13 +15,36 @@ realms:
     displayName: Clinic
     isDefault: true
 
+    # Realm-wide policy values (reqs §12.2). Every level below may only tighten these.
+    policies:
+      session.idle_minutes: 480
+
     organizations:
       - key: lakeside
         displayName: Lakeside Clinic
+        levels: [Clinic, Department]        # what each depth is called, for this tenant
+        policies:
+          session.idle_minutes: 120         # tighter than the realm; departments may go lower
+        apps:
+          - key: clinic-spa                 # allowed clinic-wide (inherit is the default)…
         domains:
           - domain: lakeside.example
             kind: emailDomain
             verified: true
+        # Divisions nest here (reqs §4.6). Other sections reference them by PATH KEY:
+        # `lakeside/cardiology`, never by a flat key.
+        organizations:
+          - key: cardiology
+            displayName: Cardiology
+            teams:
+              - key: cath-lab
+                displayName: Cath lab
+          - key: records
+            displayName: Records office
+            kind: Back office               # this node's own label, instead of "Department"
+            apps:
+              - key: clinic-spa
+                effect: deny                # …except in Records. Deny wins over the inherited allow.
 
     roles:
       # Realm-level role: no `organization` key.
@@ -29,19 +52,27 @@ realms:
         displayName: Support engineer
         grants:
           - pattern: "sentinel:org:view"
-      # Org-local role for the org declared above.
+      # Node-local role for the clinic declared above. Its grants cascade to the departments.
       - key: org-admin
         displayName: Organization administrator
         organization: lakeside
         grants:
           - pattern: "sentinel:org:manage"
           - pattern: "sentinel:org:impersonate"
+      # Node-local role two levels down, referenced by path key.
+      - key: department-lead
+        displayName: Department lead
+        organization: lakeside/cardiology
+        grants:
+          - pattern: "sentinel:org:view"
 
     oidcClients:
-      # First-party SPA: public client, PKCE-only, no secret.
+      # First-party SPA: public client, PKCE-only, no secret. Linked to the clinic-spa app,
+      # so the `apps` assignments above decide where it may sign users in (reqs §4.9).
       - clientId: clinic-spa
         type: public
         firstParty: true
+        appKey: clinic-spa
         redirectUris:
           - https://app.clinic.example/callback
         allowedScopes: [openid, profile, email]

@@ -5,8 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Nuvora.Nexus.Sentinel.Admin;
 using Nuvora.Nexus.Sentinel.Authentication;
 using Nuvora.Nexus.Sentinel.DeclarativeConfig;
+using Nuvora.Nexus.Sentinel.Definitions;
 using Nuvora.Nexus.Sentinel.DeclarativeConfig.DependencyInjection;
 using Nuvora.Nexus.Sentinel.Login;
+using Nuvora.Nexus.Sentinel.Policies;
 using Nuvora.Nexus.Sentinel.Ports;
 
 namespace ConfigAsCode.Api;
@@ -34,6 +36,10 @@ public static class ConfigAsCodeComposition
         // equivalents for every port (that is the only change a real host makes).
         services.AddSingleton<IAdminStore>(new InMemoryAdminStore());
         services.AddSingleton<IOidcStore>(new InMemoryOidcStore());
+        // Policies and application assignments ride their own ports (reqs §12.2, §4.9); a file
+        // that declares them needs these registered, else the apply reports an error per entry.
+        services.AddSingleton<IPolicyStore>(new InMemoryPolicyStore());
+        services.AddSingleton<IApplicationAssignmentStore>(new InMemoryApplicationAssignmentStore());
 
         // The applier's own dependencies (a full Sentinel host gets these from AddSentinel).
         services.AddSingleton(new PasswordHasher(

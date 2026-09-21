@@ -16,6 +16,11 @@ API uses:
 - **Fail-closed boot**: per-entry apply errors abort startup — silently unapplied config is
   how drift starts.
 - A typo'd section (`reallms:`) fails parsing outright in both YAML and JSON.
+- **Divisions nest.** `organizations` entries carry their own `organizations`; other sections
+  reference a node by **path key** (`lakeside/cardiology`). Level labels, `policies`, `apps`,
+  `teams` and `groups` sit on any node. The applier creates parents first and applies
+  policies top-down, so a department that tries to loosen the clinic's value is reported as
+  an error and not written (`Nested_divisions_apply_parents_first_and_are_referenced_by_path_key`).
 
 The Sentinel **reference server** runs this exact flow at boot (`SENTINEL_CONFIG`), then
 first-run bootstrap prints a single-use **admin invitation link** to stdout — the article
